@@ -3,4 +3,4 @@ Olá 😊 seja muito bem vindo e bem vinda ao repositório do curso AI Scientist
 
 Espero que você aproveite muito essa jornada, bons estudos! 🚀
 
-![Uploading goofy_study.gif…]()
+![Uploading goofy_study.gif…]
