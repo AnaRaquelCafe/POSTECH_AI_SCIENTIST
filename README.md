@@ -8,6 +8,8 @@ Espero que você aproveite muito essa jornada, bons estudos! 🚀
 
 ## Estrutura do repositório:
 
+📁 Base de dados Tech Challenge
+
 📁 Fase 1
 
 - Metodologia CRISP-DM para projetos de ciência de dados
