@@ -1,0 +1,80 @@
+-- ============================================================
+-- 2. VALIDAÇÃO — conferir que os dados chegaram
+-- ============================================================
+
+SELECT 'bronze'     AS camada, COUNT(*) AS total FROM datalake_demo.transacoes_vendas_bronze     WHERE anomesdia = '20260322'
+UNION ALL
+SELECT 'quarentena' AS camada, COUNT(*) AS total FROM datalake_demo.transacoes_vendas_quarentena WHERE anomesdia = '20260322'
+UNION ALL
+SELECT 'pass'       AS camada, COUNT(*) AS total FROM datalake_demo.transacoes_vendas_pass       WHERE anomesdia = '20260322'
+ORDER BY camada;
+
+-- ============================================================
+-- 4. QUARENTENA — analise dos registros problematicos
+-- ============================================================
+SELECT 
+_quarentena_motivo AS motivo,
+COUNT(*)  AS total
+FROM datalake_demo.transacoes_vendas_quarentena
+WHERE anomesdia = '20260322'
+GROUP BY _quarentena_motivo
+ORDER BY total DESC
+
+-- ============================================================
+-- 5. PASS — registros validos prontos para analise
+-- ============================================================
+
+-- Distribuicao por categoria
+SELECT
+    categoria,
+    COUNT(*)                                                        AS total_transacoes,
+    CONCAT('R$ ', FORMAT('%.2f', ROUND(SUM(valor_total), 2)))       AS receita_total,
+    CONCAT('R$ ', FORMAT('%.2f', ROUND(AVG(valor_total), 2)))       AS ticket_medio,
+    CONCAT(CAST(ROUND(AVG(desconto_pct), 1) AS VARCHAR), '%')       AS desconto_medio
+FROM datalake_demo.transacoes_vendas_pass
+WHERE anomesdia = '20260322'
+GROUP BY categoria
+ORDER BY SUM(valor_total) DESC;
+
+-- Top 10 produtos por receita
+SELECT
+    produto,
+    categoria,
+    COUNT(*)                                                        AS total_vendas,
+    SUM(quantidade)                                                 AS total_itens,
+    CONCAT('R$ ', FORMAT('%.2f', ROUND(SUM(valor_total), 2)))       AS receita_total
+FROM datalake_demo.transacoes_vendas_pass
+WHERE anomesdia = '20260322'
+GROUP BY produto, categoria
+ORDER BY SUM(valor_total) DESC
+LIMIT 10;
+
+
+-- ============================================================
+-- 6. GOLD — visoes analiticas agregadas
+-- ============================================================
+
+-- Receita por categoria
+SELECT
+    categoria,
+    total_transacoes,
+    CONCAT('R$ ', FORMAT('%.2f', receita_total))                    AS receita_total,
+    CONCAT('R$ ', FORMAT('%.2f', ticket_medio))                     AS ticket_medio,
+    itens_vendidos,
+    CONCAT(CAST(ROUND(desconto_medio_pct, 1) AS VARCHAR), '%')      AS desconto_medio,
+    lojas_ativas
+FROM datalake_demo.transacoes_vendas_gold_por_categoria
+WHERE anomesdia = '20260322'
+ORDER BY receita_total DESC;
+
+-- Receita por regiao
+SELECT
+    regiao,
+    total_transacoes,
+    CONCAT('R$ ', FORMAT('%.2f', receita_total))                    AS receita_total,
+    CONCAT('R$ ', FORMAT('%.2f', ticket_medio))                     AS ticket_medio,
+    clientes_unicos,
+    lojas_ativas
+FROM datalake_demo.transacoes_vendas_gold_por_regiao
+WHERE anomesdia = '20260322'
+ORDER BY receita_total DESC;
