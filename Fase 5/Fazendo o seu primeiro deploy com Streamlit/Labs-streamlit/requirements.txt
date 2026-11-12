@@ -1,0 +1,14 @@
+# Ambiente único dos labs (Aula0X_*/ParteN_* e Lab_GitHub_*), instalado automaticamente
+# pelo .devcontainer da raiz da matéria. Os workflows do GitHub Actions instalam o requirements.txt de cada lab.
+# Versões fixadas de propósito: evita que uma atualização quebre o lab no meio da aula.
+streamlit==1.64.0
+scikit-learn==1.8.0
+pandas==3.0.2
+numpy==2.4.4
+scipy==1.17.1
+joblib==1.5.3
+mlflow==3.16.1
+dvc==3.67.1
+evidently==0.7.23
+# Testes do Lab GitHub da Aula 01 (pytest tests/ -v)
+pytest==9.1.1

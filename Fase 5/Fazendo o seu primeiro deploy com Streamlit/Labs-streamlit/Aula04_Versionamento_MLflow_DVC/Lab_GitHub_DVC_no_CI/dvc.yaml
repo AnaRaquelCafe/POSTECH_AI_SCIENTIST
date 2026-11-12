@@ -1,0 +1,24 @@
+# Pipeline com dois estágios. Os valores ${...} vêm do params.yaml.
+stages:
+  gerar_dados:
+    cmd: python gerar_dados.py --versao ${versao_dados}
+    deps:
+      - gerar_dados.py
+    params:
+      - versao_dados
+    outs:
+      - dados/clientes.csv
+
+  treinar:
+    cmd: python treinar.py --n-estimators ${n_estimators} --max-depth ${max_depth}
+    deps:
+      - dados/clientes.csv
+      - treinar.py
+    params:
+      - n_estimators
+      - max_depth
+    outs:
+      - modelo.joblib
+    metrics:
+      - metricas.json:
+          cache: false

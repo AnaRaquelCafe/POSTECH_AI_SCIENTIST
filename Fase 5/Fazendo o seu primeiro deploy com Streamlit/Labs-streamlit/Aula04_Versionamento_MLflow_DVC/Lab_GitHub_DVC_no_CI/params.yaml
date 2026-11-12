@@ -1,0 +1,4 @@
+# Parâmetros do pipeline. Mude aqui (e não no código) para que o DVC saiba o que mudou.
+versao_dados: 1
+n_estimators: 200
+max_depth: 8

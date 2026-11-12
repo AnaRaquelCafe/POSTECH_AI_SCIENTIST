@@ -1,0 +1,20 @@
+# Aula 02 · Parte 3 — dois serviços sobem juntos com "docker compose up".
+services:
+  app:
+    build: .
+    image: churn-app:seguro
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./modelos:/app/modelos:ro   # modelo fora da imagem, só leitura
+
+  monitor:
+    image: busybox:1.37
+    depends_on:
+      - app
+    # Os serviços se enxergam pelo nome: "app" vira um endereço de rede
+    command: >
+      sh -c 'while true; do
+        if wget -qO- http://app:8501/_stcore/health > /dev/null 2>&1;
+        then echo "app saudável"; else echo "app fora do ar"; fi;
+        sleep 5; done'

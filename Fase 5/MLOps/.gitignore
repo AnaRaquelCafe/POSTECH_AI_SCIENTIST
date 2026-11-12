@@ -1,0 +1,24 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+
+# Gerados durante os labs
+Labs_MLOps/mlflow.db
+Labs_MLOps/mlartifacts/
+mlruns/
+Labs_MLOps/**/model.joblib
+Labs_MLOps/**/captura/
+Labs_MLOps/**/*.html
+
+# Guia do professor: não publicar
+Labs_MLOps/GUIA_PROFESSOR.md
+
+# Backups das versões anteriores do material (ficam só no Drive)
+*_v1.docx
+*_v1.pptx
+
+# Roteiros de gravação do professor: não publicar
+Roteiros-Professor/
+Roteiros-Professor.zip

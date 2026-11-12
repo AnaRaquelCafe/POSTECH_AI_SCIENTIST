@@ -1,0 +1,8 @@
+# O que NÃO entra no contexto de build (nem na imagem)
+dados/
+ghcr.yml
+README.md
+__pycache__/
+*.pyc
+.venv/
+venv/

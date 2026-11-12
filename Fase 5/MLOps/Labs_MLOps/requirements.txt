@@ -1,0 +1,14 @@
+# Ambiente único dos 12 labs (instalado automaticamente pelo .devcontainer da raiz da disciplina).
+# Versões fixadas de propósito: evita que uma atualização quebre o lab no meio da aula.
+mlflow==3.16.1
+scikit-learn==1.8.0
+pandas==3.0.2
+numpy==2.4.4
+scipy==1.17.1
+joblib==1.5.3
+evidently==0.7.23
+fastapi==0.141.1
+uvicorn[standard]==0.54.0
+pydantic==2.13.5
+requests==2.34.2
+pytest==9.1.1

@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+.venv/
+treinar_modelo_exemplo.py
+README.md

@@ -1,0 +1,47 @@
+# Monitoramento de drift agendado: roda toda segunda-feira e abre uma issue se houver drift.
+# Copie para .github/workflows/monitoramento.yml na raiz do repositório.
+name: Monitoramento de drift
+
+on:
+  schedule:
+    - cron: "0 11 * * 1"          # segundas, 11h UTC (8h em Brasília)
+  workflow_dispatch:               # botão "Run workflow" na aba Actions
+    inputs:
+      deslocamento_idade:
+        description: "Simular clientes N anos mais velhos (0 = sem mudança)"
+        default: "0"
+
+permissions:
+  contents: read
+  issues: write                    # para abrir a issue de alerta
+
+jobs:
+  monitorar:
+    runs-on: ubuntu-24.04   # fixo: o ubuntu-latest muda de versão sozinho
+    defaults:
+      run:
+        working-directory: Labs-streamlit/Aula03_Monitoramento_Drift/Lab_GitHub_Monitoramento_Agendado
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+
+      - name: Calcular drift da semana
+        id: monitor
+        run: python monitorar_semana.py
+        env:
+          DESLOCAMENTO_IDADE: ${{ inputs.deslocamento_idade || '0' }}
+
+      - name: Guardar o relatório do Evidently
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-drift
+          path: Labs-streamlit/Aula03_Monitoramento_Drift/Lab_GitHub_Monitoramento_Agendado/relatorio_drift.html
+
+      - name: Abrir issue de alerta
+        if: steps.monitor.outputs.drift == 'true'
+        run: gh issue create --title "Drift detectado — semana $(date +%V)" --body-file resumo.md
+        env:
+          GH_TOKEN: ${{ github.token }}

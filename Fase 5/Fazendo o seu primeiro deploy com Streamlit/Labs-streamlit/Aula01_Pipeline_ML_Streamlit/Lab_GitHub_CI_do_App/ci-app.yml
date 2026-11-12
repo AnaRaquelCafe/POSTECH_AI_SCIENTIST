@@ -1,0 +1,26 @@
+# Testa o app de Streamlit a cada push. Copie para .github/workflows/ci-app.yml na raiz do repositório.
+name: CI do app Streamlit
+
+on:
+  push:
+    paths:
+      - "Labs-streamlit/Aula01_Pipeline_ML_Streamlit/Lab_GitHub_CI_do_App/**"
+      - ".github/workflows/ci-app.yml"
+  pull_request:
+    paths:
+      - "Labs-streamlit/Aula01_Pipeline_ML_Streamlit/Lab_GitHub_CI_do_App/**"
+  workflow_dispatch:
+
+jobs:
+  testar-app:
+    runs-on: ubuntu-24.04   # fixo: o ubuntu-latest muda de versão sozinho
+    defaults:
+      run:
+        working-directory: Labs-streamlit/Aula01_Pipeline_ML_Streamlit/Lab_GitHub_CI_do_App
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: pytest tests/ -v

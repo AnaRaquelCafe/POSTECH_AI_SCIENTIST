@@ -1,0 +1,47 @@
+# Pipeline de CI com as três camadas de testes de ML: código -> dados -> modelo.
+# Substitua o .github/workflows/ci-mlops.yml da Parte 1 por este arquivo.
+name: CI MLOps
+
+on:
+  push:
+    paths:
+      - "Labs_MLOps/Aula03_CICD_para_ML/**"
+      - "Labs_MLOps/dados/**"
+      - ".github/workflows/ci-mlops.yml"
+  workflow_dispatch:
+
+env:
+  LAB: Labs_MLOps/Aula03_CICD_para_ML
+
+jobs:
+  test-code:
+    runs-on: ubuntu-24.04   # fixo: o ubuntu-latest muda de versão sozinho
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r $LAB/Parte1_CI_GitHub_Actions/requirements-ci.txt
+      - run: pytest $LAB/Parte1_CI_GitHub_Actions/tests/ -v
+
+  test-data:
+    needs: test-code            # só roda se os testes de código passarem
+    runs-on: ubuntu-24.04   # fixo: o ubuntu-latest muda de versão sozinho
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r $LAB/Parte1_CI_GitHub_Actions/requirements-ci.txt
+      - run: python $LAB/Parte2_Testes_Dados_e_Modelo/scripts/test_data_quality.py
+
+  test-model:
+    needs: test-data            # só roda se os dados estiverem OK
+    runs-on: ubuntu-24.04   # fixo: o ubuntu-latest muda de versão sozinho
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r $LAB/Parte1_CI_GitHub_Actions/requirements-ci.txt
+      - run: python $LAB/Parte2_Testes_Dados_e_Modelo/scripts/test_model_quality.py

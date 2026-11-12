@@ -1,0 +1,55 @@
+# Roda o pipeline DVC a cada pull request e comenta a diferença de métricas no PR.
+# Copie para .github/workflows/dvc-ci.yml na raiz do repositório.
+name: Pipeline DVC
+
+on:
+  pull_request:
+    paths:
+      - "Labs-streamlit/Aula04_Versionamento_MLflow_DVC/Lab_GitHub_DVC_no_CI/**"
+  push:
+    branches: [main]
+    paths:
+      - "Labs-streamlit/Aula04_Versionamento_MLflow_DVC/Lab_GitHub_DVC_no_CI/**"
+      - ".github/workflows/dvc-ci.yml"
+
+permissions:
+  contents: read
+  pull-requests: write          # para comentar no PR
+
+jobs:
+  reproduzir:
+    runs-on: ubuntu-24.04   # fixo: o ubuntu-latest muda de versão sozinho
+    defaults:
+      run:
+        working-directory: Labs-streamlit/Aula04_Versionamento_MLflow_DVC/Lab_GitHub_DVC_no_CI
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0          # histórico completo, para comparar com o main
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+
+      - name: Reproduzir o pipeline
+        run: dvc repro
+
+      - name: Métricas deste commit
+        run: |
+          echo "## Métricas" >> "$GITHUB_STEP_SUMMARY"
+          dvc metrics show --md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Comparar com o main e comentar no PR
+        if: github.event_name == 'pull_request'
+        run: |
+          {
+            echo "## Resultado do pipeline DVC"
+            echo "### Parâmetros alterados"
+            dvc params diff origin/${{ github.base_ref }} --md
+            echo "### Métricas (main → este PR)"
+            dvc metrics diff origin/${{ github.base_ref }} --md
+          } > comentario.md
+          cat comentario.md >> "$GITHUB_STEP_SUMMARY"
+          gh pr comment ${{ github.event.pull_request.number }} --body-file comentario.md
+        env:
+          GH_TOKEN: ${{ github.token }}

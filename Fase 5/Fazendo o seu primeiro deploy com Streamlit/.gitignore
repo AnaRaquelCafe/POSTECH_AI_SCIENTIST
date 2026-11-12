@@ -1,0 +1,32 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+mlflow.db
+mlruns/
+mlartifacts/
+*.html
+.DS_Store
+
+# Arquivos gerados durante os labs
+Labs-streamlit/Aula01_Pipeline_ML_Streamlit/Parte1_Estruturando_o_Pipeline/modelo_churn.joblib
+Labs-streamlit/Aula02_Containerizacao_Docker/Parte3_Boas_Praticas_e_Compose/dados/
+Labs-streamlit/Aula04_Versionamento_MLflow_DVC/Parte2_MLflow_na_Pratica/dados/*.csv
+# Evita commitar o CSV no Git antes do "dvc add" (o DVC recusaria o arquivo)
+Labs-streamlit/Aula04_Versionamento_MLflow_DVC/Parte3_DVC_para_Dados_e_Pipelines/dados/*.csv
+
+# Guia do professor: não publicar
+Labs-streamlit/GUIA_PROFESSOR.md
+
+# Backups das versões anteriores do material (ficam só no Drive)
+*_v1.docx
+*_v1.pptx
+
+# Saídas do lab de monitoramento agendado
+Labs-streamlit/Aula03_Monitoramento_Drift/Lab_GitHub_Monitoramento_Agendado/resumo.md
+
+# Roteiros de gravação do professor: não publicar
+Roteiros-Professor/
+
+# Roteiros do professor (zip): ficam só no Drive
+Roteiros-Professor.zip

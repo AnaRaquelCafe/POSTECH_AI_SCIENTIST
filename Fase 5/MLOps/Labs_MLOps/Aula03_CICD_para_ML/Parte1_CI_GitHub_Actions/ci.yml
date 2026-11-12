@@ -1,0 +1,24 @@
+# Pipeline de CI: roda os testes de código a cada push.
+# Copie este arquivo para .github/workflows/ci-mlops.yml na raiz do repositório.
+name: CI MLOps
+
+on:
+  push:
+    paths:
+      - "Labs_MLOps/Aula03_CICD_para_ML/**"
+      - ".github/workflows/ci-mlops.yml"
+  workflow_dispatch:
+
+jobs:
+  test-code:
+    runs-on: ubuntu-24.04   # fixo: o ubuntu-latest muda de versão sozinho
+    defaults:
+      run:
+        working-directory: Labs_MLOps/Aula03_CICD_para_ML/Parte1_CI_GitHub_Actions
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-ci.txt
+      - run: pytest tests/ -v

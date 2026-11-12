@@ -1,0 +1,21 @@
+{
+  "name": "Labs MLOps - POSTECH",
+  "build": { "dockerfile": "Dockerfile" },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "updateContentCommand": "pip install --no-cache-dir -r Labs_MLOps/requirements.txt",
+  "forwardPorts": [5000, 5001, 8000, 8080],
+  "portsAttributes": {
+    "5000": { "label": "MLflow UI", "onAutoForward": "openBrowser" },
+    "5001": { "label": "Endpoint do modelo", "onAutoForward": "silent" },
+    "8000": { "label": "API / relatorios", "onAutoForward": "openBrowser" },
+    "8080": { "label": "Balanceador", "onAutoForward": "openBrowser" }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python", "ms-azuretools.vscode-docker", "github.vscode-github-actions"]
+    }
+  },
+  "hostRequirements": { "cpus": 2 }
+}

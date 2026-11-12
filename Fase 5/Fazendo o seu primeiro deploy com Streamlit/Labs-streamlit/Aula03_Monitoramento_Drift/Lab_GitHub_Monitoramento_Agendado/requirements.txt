@@ -1,0 +1,5 @@
+# Dependências do job de monitoramento (versões iguais às dos labs).
+pandas==3.0.2
+numpy==2.4.4
+scipy==1.17.1
+evidently==0.7.23

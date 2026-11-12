@@ -1,0 +1,6 @@
+# Dependências do pipeline no CI (versões iguais às dos labs).
+dvc==3.67.1
+pandas==3.0.2
+numpy==2.4.4
+scikit-learn==1.8.0
+joblib==1.5.3

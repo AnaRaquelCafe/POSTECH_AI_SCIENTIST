@@ -1,0 +1,41 @@
+# Constrói a imagem e publica no GitHub Container Registry (ghcr.io) a cada push nesta pasta.
+# Copie para .github/workflows/ghcr.yml na raiz do repositório.
+name: Publicar imagem no GHCR
+
+on:
+  push:
+    paths:
+      - "Labs-streamlit/Aula02_Containerizacao_Docker/Lab_GitHub_GHCR/**"
+      - ".github/workflows/ghcr.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write        # o GITHUB_TOKEN pode publicar pacotes deste repositório
+
+jobs:
+  publicar:
+    runs-on: ubuntu-24.04   # fixo: o ubuntu-latest muda de versão sozinho
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Nome da imagem (o GHCR exige letras minúsculas)
+        run: |
+          DONO=$(echo "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')
+          echo "IMAGEM=ghcr.io/$DONO/churn-app" >> "$GITHUB_ENV"
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: Labs-streamlit/Aula02_Containerizacao_Docker/Lab_GitHub_GHCR
+          push: true
+          # latest = versão mais recente; o SHA do commit identifica exatamente de qual código veio a imagem
+          tags: |
+            ${{ env.IMAGEM }}:latest
+            ${{ env.IMAGEM }}:${{ github.sha }}
+          labels: org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}

@@ -1,0 +1,9 @@
+# Dependências da API (as mesmas vão para dentro da imagem Docker na Parte 2).
+# A versão do scikit-learn PRECISA ser a mesma que gerou o model.joblib.
+fastapi==0.141.1
+uvicorn[standard]==0.54.0
+pydantic==2.13.5
+pandas==3.0.2
+numpy==2.4.4
+scikit-learn==1.8.0
+joblib==1.5.3

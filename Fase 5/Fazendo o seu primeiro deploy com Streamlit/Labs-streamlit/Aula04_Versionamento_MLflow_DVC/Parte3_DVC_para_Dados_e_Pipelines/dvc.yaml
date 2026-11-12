@@ -1,0 +1,12 @@
+# Pipeline reprodutível: "dvc repro" só roda o estágio se alguma dependência mudou.
+stages:
+  treinar:
+    cmd: python treinar.py
+    deps:
+      - dados/clientes.csv
+      - treinar.py
+    outs:
+      - modelo.joblib
+    metrics:
+      - metricas.json:
+          cache: false
